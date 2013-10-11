@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Layers Control Example</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
+  <link href='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
+  <!--[if lte IE 8]>
+    <link href='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet'>
+  <![endif]-->
+
+	<style>
+		#map {
+			width: 100%;
+			height: 500px;
+		}
+
+		.info {
+			padding: 6px 8px;
+			font: 14px/16px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+		}
+		.info h4 {
+			margin: 0 0 5px;
+			color: #777;
+		}
+
+		.legend {
+			text-align: left;
+			line-height: 18px;
+			color: #555;
+		}
+		.legend i {
+			width: 18px;
+			height: 18px;
+			float: left;
+			margin-right: 8px;
+			opacity: 0.7;
+		}
+
+#map-ui {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 100;
+    height: 100%;
+}
+
+#map-ui a {
+    font: normal 13px/18px 'Avenir LT W02 85 Heavy',verdana,sans-serif;
+    background: #777;
+    color: #fff;
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #BBB;
+    border-bottom-width: 0;
+    min-width: 138px;
+    padding-top: 8px;
+    text-decoration: none;
+    height: 24px;
+    border-left: none;
+    border-right: none;
+}
+
+#map-ui a:hover {
+    background: #555;
+}
+
+#map-ui li:last-child a {
+    
+}
+
+#map-ui li:first-child a {
+    border-top: none;
+}
+
+#map-ui a.active {
+    background: #333;
+    
+    border-top-color: #FFF;
+    color: #FFF;
+    }
+#map-ui a.active:hover {
+    background-color: #555;
+}
+
+#map-ui a div {
+    float: left;
+    padding-left: 10px;
+}
+
+.rightside {
+    float: right !important;
+    padding-right: 10px;
+    font-weight: bold;
+}
+	</style>
+</head>
+<body>
+	<ul id='map-ui'></ul>
+	<div id="map"></div>
+	<button>gdassadfasdffd</button>
+	<div></div>
+
+	<script type="text/javascript" src="us-states.js"></script>
+	<script type="text/javascript" src="data.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript">
+	  	var ui = document.getElementById('map-ui');
+
+
+	  	var statesData2 = [];
+	  	statesData2.push(statesData.features[0])
+		var map = L.mapbox.map('map', 'examples.map-9ijuk24y')
+		    .setView([37.8, -96], 4);
+
+		var raw = [];
+		// var home = [];
+
+		//create a raw that filters the us-states.js into what each clickable (award) will be plus a total. #awesome
+		for (var k = 0; k < competition.length; k++) {
+			//every time there is a new competition entry, create a blank array in raw
+			raw.push([]);
+			// home.push([]);
+			for (var i = 0; i < competition[k].affected.length; i++) {
+				// console.log(raw[i])
+				for (var j = 0; j < statesData.features.length; j++) {
+					//go through the us-states.js and if in comp[k] there is the state we are looking at, push it to raw[k]
+					if (statesData.features[j].properties.code === competition[k].affected[i]) {raw[k].push(statesData.features[j])};
+
+					// console.log(raw[k])
+
+					
+				};
+				
+				// var state1 = competition[k].state;
+				// var state2 = competition[k].affected[i];
+				
+				// if (state1 === state2) {raw[k][i].properties['highlight'] = 0;} 
+					// else {raw[k][i].properties['highlight'] = 1;};
+
+// raw[k][i].properties['arbitrary'] = Math.random();					
+				// console.log(competition[k].name + " location: " +competition[k].city + ", " + state1)
+				// console.log(competition[k].name + " home: " + state2)
+
+			};				
+		};
+				for (var k = competition.length - 1; k >= 0; k--) {
+					for (var m = competition[k].affected.length - 1; m >= 0; m--) {
+						// console.log(competition[k].affected[m])
+						if (competition[k].affected[m] == competition[k].state) {
+
+							for (var i = raw.length - 1; i >= 0; i--) {
+								for (var j = raw[i].length - 1; j >= 0; j--) {
+									// console.log(raw[i][j])
+
+									if (raw[i][j].properties.code == competition[k].affected[m]) {
+// console.log(competition[k].affected[m])
+										raw[i][j].properties['arb2'] = Math.random();
+											
+									};
+								console.log(raw[i][j].properties)		
+								};
+								 console.log('e' + i)
+							};
+
+
+						} 
+						// if (competition[k].affected[m] == competition[k].state) {raw[i][j].properties['highlight'] = 0;} else{raw[i][j].properties['highlight'] = 1;};
+					};					
+				};
+
+
+		
+
+		var start = L.geoJson(raw[7]);
+
+		//call the geojson TOTAL
+		var lg = L.featureGroup([start]);
+		lg.addTo(map);
+		// lg.setStyle(style);
+
+
+		for (var i = competition.length - 1; i >= 0; i--) {
+			var item = document.createElement('li');
+		    var link1234 = document.createElement('a');
+		    var right1 = document.createElement('div');
+		    var left1 = document.createElement('div');
+
+		   		item.className = 'menu num' + i;
+		   		item.id = i;
+		        link1234.href = '#&';
+		   		left1.innerHTML = competition[i].name; 
+
+		    link1234.appendChild(left1);
+		    link1234.appendChild(right1);	
+		    item.appendChild(link1234);
+		    ui.appendChild(item);
+
+
+		};
+
+		$(document).ready(function(){
+
+
+		var q = 0;
+		var current2;
+		// var homecurrent2;
+
+//what to do when click.
+		  $('.menu').click(function (e){
+		  	e.preventDefault();
+
+		  	//turns active on off
+		  	$('.menu').removeClass('active');
+		  	$(this).addClass('active');
+
+		  	//set variable equal to the raw[i] of the button
+		  	l = this.id
+
+		  	//display this
+		  	
+		  	if (q === 0) {lg.removeLayer(start);} else {lg.removeLayer(current2);
+		  		// lg.removeLayer(homecurrent2)
+		  	};
+
+
+		  	var current = L.geoJson(raw[l]);
+		  	// var homecurrent = L.geoJson(home[l]);
+		  	current2 = current;
+			// homecurrent2 = homecurrent;
+
+		function getColor(d) {
+			return d > 0   ? '#BD0026' :
+			       
+			                     '#ff00ff' ;
+		}
+
+		function style(feature)  {
+			// console.log(feature)
+
+			return {
+                    weight: 1,
+                    dashArray: '3',
+                    fillOpacity: '0.7',
+					fillColor: getColor(feature.properties.arb2)
+                }
+            };
+
+
+			lg.addLayer(current);
+			// lg.addLayer(homecurrent2);
+			lg.setStyle(style);
+
+			q ++;
+		  });
+		});
+
+
+	</script>
+</body>
+</html>

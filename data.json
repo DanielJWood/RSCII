@@ -1,0 +1,74 @@
+var competiton = [
+	{
+		"ID": "1",
+		"name": "Clean Energy States Alliance",
+		"city": "Montpelier",
+		"state": "VT",
+		"popimpact": "13000000",
+		"affected": ["CT","MA","NH","RI","VT"]
+	},
+	{
+		"ID": "2",
+		"name": "City University of New York",
+		"city": "New York",
+		"state": "NY",
+		"popimpact": "10200000",
+		"affected": ["NY"]
+	},
+	{
+		"ID": "3",
+		"name": "Washington State Department of Commerce",
+		"city": "Olympia",
+		"state": "WA",
+		"popimpact": "10500000",
+		"affected": ["OR","WA"]
+	},
+	{
+		"ID": "4",
+		"name": "Optony Inc.",
+		"city": "Santa Clara",
+		"state": "CA",
+		"popimpact": "60000000",
+		"affected": ["CA","CO","DC","DE","FL","HI","IA","ID","MD","MO","NV","NY","PA","TX","UT","VA"]
+	},
+	{
+		"ID": "5",
+		"name": "Broward County, Florida",
+		"city": "Fort Lauderdale",
+		"state": "FL",
+		"popimpact": "4000000",
+		"affected": ["FL"]
+	},
+	{
+		"ID": "6",
+		"name": "Mid-America Regional Council (MARC)",
+		"city": "Kansas City",
+		"state": "MO",
+		"popimpact": "10000000",
+		"affected": ["DC","FL","IN","KS","MO","NY","OH","PA","TX"]
+	},
+	{
+		"ID": "7",
+		"name": "Iowa Economic Development Authority",
+		"city": "Des Moines",
+		"state": "IA",
+		"popimpact": "3100000",
+		"affected": ["IA"]
+	},
+	{
+		"ID": "8",
+		"name": "California Center for Sustainable Energy",
+		"city": "San Diego",
+		"state": "CA",
+		"popimpact": "37000000",
+		"affected": ["CA"]
+	},
+	{
+		"ID": "9",
+		"name": "Total",
+		"city": "Total",
+		"state": "Total",
+		"popimpact": "147800000",
+		"affected": ["CA","CO","CT","DC","DE","FL","HI","IA","ID","IN","KS","MA","MD","MO","NH","NV","NY","OH","OR","PA","RI","TX","UT","VA","VT","WA"]
+	}
+]

@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Layers Control Example</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
+  <link href='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
+  <!--[if lte IE 8]>
+    <link href='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet'>
+  <![endif]-->
+
+	<style>
+	/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+		#map {
+			width: 100%;
+			height: 530px;
+			top: 0px;
+			left: 0px;
+		}
+
+
+#map-ui {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 100;
+    height: 100%;
+    background: #CCC;
+        max-width: 320px;
+
+}
+
+#map-ui a {
+    font: normal 13px/18px 'Avenir LT W02 85 Heavy',verdana,sans-serif;
+    color: #fff;
+    display: block;
+    margin: 0;
+    padding: 0;
+    max-width: 320px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    text-decoration: none;
+    line-height: 14px;
+    height: 14px;
+
+}
+
+#map-ui li {
+	background: #777;
+	margin-left: 3px;
+	margin-right: 3px;
+	margin-top: 3px;
+}
+
+#map-ui a:hover {
+    background: #555;
+}
+
+#map-ui li:first-child a {
+    border-top: none;
+}
+
+#map-ui li.active {
+    background: #333 !important; 
+    border-top-color: #FFF;
+    color: #FFF;
+    }
+#map-ui a.active:hover {
+    background-color: #555;
+}
+
+#map-ui a div {
+    float: left;
+    padding-left: 10px;
+}
+
+#line_legend {
+	position: absolute;
+	bottom: 10px;
+	left: 330px;	
+	z-index: 100;
+	color: #fff;
+	margin-right: 30px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-align: left;
+	line-height: 24px;
+	background-color: rgb(30,30,30);
+	background-color: rgba(30,30,30,0.7);
+	padding-left: 10px;
+	padding-right: 10px;
+
+}
+
+#line_legend p {
+	display: block;
+	font-size: 16px;
+}
+
+.leaflet-left {
+	left: 320px !important;
+}
+
+.informacion {
+	padding: 4px;
+	color: #333;
+
+}
+#number {
+	border-bottom: 3px solid #333;
+	font-size: 15px;
+	text-align: center
+}
+#description {
+	padding-top: 5px;
+	font-size: 12px;
+}
+#title {
+	top: 0px; 
+	right: 0px;
+	z-index: 1000;
+	position: absolute;
+	color: #333;
+	text-align: right;
+	margin-right: 10px;
+}
+#title h1 {
+	font-size: 30px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+#title h2 {
+	font-size: 24px;
+	padding: 0px;
+	margin: 0px;
+	line-height: 10px;
+}
+	</style>
+</head>
+<body>
+	
+	<div id="map">
+		<div id="title">
+			<h1>Rooftop Solar Challenge II</p>
+			<h2>Award Winners</p>
+		</div>
+		<ul id='map-ui'>
+		</ul>
+		<div id="line_legend">
+			<p><span style="color:#ddad00; font-size: 16px; font-weight: bold; ">▇</span>&nbsp;&nbsp;&nbsp;Rooftop Solar Challenge II Awardee's Home State</p>
+			
+	    </div>	
+	</div>
+	
+	<script type="text/javascript" src="newdata.js"></script>
+	<script type="text/javascript" src="data.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript">
+	  	var ui = document.getElementById('map-ui');	  	
+	  	var legendia = document.getElementById('line_legend')
+		var map = L.mapbox.map('map', 'examples.map-9ijuk24y')
+		    .setView([37.8, -114], 4);
+
+		var raw = [];
+		var start = L.geoJson(testdata[8])
+
+		//call the geojson TOTAL
+		var lg = L.featureGroup([start]);
+		lg.addTo(map);
+		lg.setStyle(style);
+
+		for (var i = competition.length - 1; i >= 0; i--) {
+			var item = document.createElement('li');
+		    var link1234 = document.createElement('a');
+		    var right1 = document.createElement('div');
+		    var left1 = document.createElement('div');
+
+
+		    if (i == 8) {item.className = 'menu active num' + i;}
+		    else {item.className = 'menu num' + i;}
+		   		
+		   		item.id = i;
+		        link1234.href = '#&';
+		   		left1.innerHTML = competition[i].name; 
+
+		    link1234.appendChild(left1);
+		    link1234.appendChild(right1);	
+		    item.appendChild(link1234);
+		    ui.appendChild(item);
+		    
+		};
+
+		//create info below 
+		var info = document.createElement('div');
+		info.className = 'informacion';
+		info.innerHTML = "<div id='number'>Estimated number of people impacted "+ competition[8].popimpact +"</div><div id='description'> Select a Rooftop Solar Challenge Awardee to see their impact.</div>"
+		ui.appendChild(info);
+
+		//create second legend line
+		var second = document.createElement('p');
+		second.innerHTML = "<span style='color:#2BB9CC; font-size: 16px; font-weight: bold; '>▇</span>&nbsp;&nbsp;&nbsp;States Benefiting from all Awardees";
+
+		legendia.appendChild(second);		
+
+		$(document).ready(function(){
+		var q = 0;
+		var current2;
+
+
+//what to do when click.
+		  $('.menu').click(function (e){
+		  	e.preventDefault();
+
+		  	//turns active on off
+		  	$('.menu').removeClass('active');
+		  	$(this).addClass('active');
+
+		  	//set variable equal to the raw[i] of the button
+		  	l = this.id
+
+		  	if (l == 8) {
+		  		info.innerHTML = "<div id='number'>Estimated number of people impacted "+ competition[l].popimpact +"</div><div id='description'> Select a Rooftop Solar Challenge Awardee to see their impact.</div>";
+		  		second.innerHTML = "<span style='color:#2BB9CC; font-size: 16px; font-weight: bold; '>▇</span>&nbsp;&nbsp;&nbsp;States Benefiting from all Awardees";
+		  	} 
+		  	else {
+			  	info.innerHTML = "<div id='number'>Estimated number of people impacted "+ competition[l].popimpact +"</div><div id='description'><p>Headquarters: " + competition[l].city + ", " + competition[l].state + "</p><p>" + competition[l].text + "</p></div>";
+			  	second.innerHTML = "<span style='color:#2BB9CC; font-size: 16px; font-weight: bold; '>▇</span>&nbsp;&nbsp;&nbsp;States Benefiting from " + competition[l].name
+			};
+				ui.appendChild(info);
+				legendia.appendChild(second);
+		  	
+		  	//display this		  
+		  	if (q === 0) {lg.removeLayer(start);} else {lg.removeLayer(current2);};
+
+		  	var current = L.geoJson(testdata[l]);
+
+		  	console.log(testdata[l])
+
+		  	current2 = current;
+			lg.addLayer(current);
+			lg.setStyle(style);
+
+			q ++;
+		  });
+		});
+		function getColor(d) {
+			return d == 0   ? '#ddad00' :
+			                 '#2BB9CC' ;
+		}
+
+		function style(feature)  {
+			// console.log(feature)
+
+			return {
+                    weight: 3,
+                    dashArray: '10,10',
+                    fillOpacity: '0.5',
+					fillColor: getColor(feature.properties.highlight),
+					color: '#2399A8'
+                }
+            };
+
+
+
+	</script>
+</body>
+</html>

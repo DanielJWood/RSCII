@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Layers Control Example</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="ie.css" /><![endif]-->
+
+	<style>
+		#map {
+			width: 800px;
+			height: 500px;
+		}
+
+		.info {
+			padding: 6px 8px;
+			font: 14px/16px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+		}
+		.info h4 {
+			margin: 0 0 5px;
+			color: #777;
+		}
+
+		.legend {
+			text-align: left;
+			line-height: 18px;
+			color: #555;
+		}
+		.legend i {
+			width: 18px;
+			height: 18px;
+			float: left;
+			margin-right: 8px;
+			opacity: 0.7;
+		}
+	</style>
+</head>
+<body>
+	<div id="map"></div>
+	<button>gdassadfasdffd</button>
+	<div></div>
+
+	<script src="leaflet.js"></script>
+
+	<script type="text/javascript" src="us-states.js"></script>
+	<script type="text/javascript" src="data.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript">
+	  	var statesData2 = [];
+	  	statesData2.push(statesData.features[0])
+var map = L.map('map').setView([37.8, -96], 4);
+
+var test123 = L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
+			attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+			key: 'BC9A493B41014CAABB98F0471D759707',
+			styleId: 22677
+}).addTo(map);
+
+var raw = [];
+
+//create a raw that filters the us-states.js into what each clickable (award) will be plus a total. #awesome
+for (var k = 0; k < competition.length; k++) {
+	//every time there is a new competition entry, create a blank array in raw
+	raw.push([]);
+	for (var i = 0; i < competition[k].affected.length; i++) {
+		for (var j = 0; j < statesData.features.length; j++) {
+			//go through the us-states.js and if in comp[k] there is the state we are looking at, push it to raw[k]
+			if (statesData.features[j].properties.code === competition[k].affected[i]) {raw[k].push(statesData.features[j])};
+		};
+	};
+};
+
+var states = L.geoJson(statesData);
+
+//call the geojson TOTAL
+var total = L.geoJson(raw[6]);
+var lg = L.layerGroup([states]);
+lg.addTo(map);
+
+$(document).ready(function(){
+  $("button").click(function(){
+
+
+	lg.removeLayer(states);
+	lg.addLayer(total);
+
+
+  });
+});
+
+
+	</script>
+</body>
+</html>
