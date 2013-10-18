@@ -145,9 +145,11 @@ table {
 
 }
 
-#line_legend p {
-	display: block;
-	font-size: 16px;
+.legend {
+	position: absolute;
+	bottom: 10px;
+	left: 330px;
+	z-index: 10000;
 }
 
 .leaflet-left {
@@ -188,6 +190,25 @@ table {
 	margin: 0px;
 	line-height: 10px;
 }
+
+#inset {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	width: 150px;
+	height: 148px;
+	border-left: 5px solid #fff;
+	border-top: 5px solid #fff;
+	z-index: 10000;	
+}
+
+#insetmap {
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;	
+}
+
 	</style>
 </head>
 <body>
@@ -199,28 +220,60 @@ table {
 		</div>
 		<ul id='map-ui'>
 		</ul>
-		<div id="line_legend">
-			<p><span style="color:#ddad00; font-size: 16px; font-weight: bold; ">▇</span>&nbsp;&nbsp;&nbsp;Rooftop Solar Challenge II Awardee's Home State</p>
-			
-	    </div>	
+		
+	    <div id="inset">
+	    	<div id="insetmap">
+
+	    	</div>
+	    </div>
+	    
+	    <div class="legend">
+	    	<img src="http://api.tiles.mapbox.com/mapbox.js/v1.3.1/images/marker-shadow.png">
+	    </div>
+		<div class="legend">
+	    	<img src="http://api.tiles.mapbox.com/mapbox.js/v1.3.1/images/marker-icon.png">
+	    	<h1 style="margin-left: 10px; display: inline; font-size: 20px;">Award Winner Headquarters</h1>
+
+	    </div>
 	</div>
 	
 	<script type="text/javascript" src="newdata.js"></script>
+	<script type="text/javascript" src="points.js"></script>
 	<script type="text/javascript" src="data.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript">
+	  	var insetmap = L.mapbox.map('insetmap', 'energy.map-iaegae49')
+		    .setView([20.3, -157.3], 5);
+insetmap.dragging.disable();
+insetmap.touchZoom.disable();
+insetmap.doubleClickZoom.disable();
+insetmap.scrollWheelZoom.disable();
+
 	  	var ui = document.getElementById('map-ui');	  	
-	  	var legendia = document.getElementById('line_legend')
-		var map = L.mapbox.map('map', 'examples.map-9ijuk24y')
-		    .setView([37.8, -114], 4);
+		var map = L.mapbox.map('map', 'energy.map-iaegae49', {zoomControl: false})
+		    .setView([37.8, -110], 4);
+		   console.log(map)
+map.dragging.disable();
+map.touchZoom.disable();
+map.doubleClickZoom.disable();
+map.scrollWheelZoom.disable();
 
 		var raw = [];
-		var start = L.geoJson(testdata[8])
+		var start = L.geoJson(data[8]);
+		var cheetah = L.geoJson(data[8]); 
+		var pointy = L.geoJson(points[8]);
 
 		//call the geojson TOTAL
-		var lg = L.featureGroup([start]);
+		var lg = L.featureGroup([start,pointy]);
 		lg.addTo(map);
+
+
 		lg.setStyle(style);
+		
+		var tgg = L.featureGroup([cheetah]);
+		tgg.addTo(insetmap);
+		tgg.setStyle(style);
+		
 
 		for (var i = competition.length - 1; i >= 0; i--) {
 			var item = document.createElement('li');
@@ -249,12 +302,7 @@ table {
 		info.innerHTML = "<div id='number'>Estimated number of people impacted "+ competition[8].popimpact +"</div><div id='description'> Select a Rooftop Solar Challenge Awardee to see their impact.</div>"
 		ui.appendChild(info);
 
-		//create second legend line
-		var second = document.createElement('p');
-		second.innerHTML = "<span style='color:#2BB9CC; font-size: 16px; font-weight: bold; '>▇</span>&nbsp;&nbsp;&nbsp;States Benefiting from all Awardees";
-
-		legendia.appendChild(second);		
-
+		
 		$(document).ready(function(){
 		var q = 0;
 		var current2;
@@ -273,33 +321,36 @@ table {
 
 		  	if (l == 8) {
 		  		info.innerHTML = "<div id='number'>Estimated number of people impacted "+ competition[l].popimpact +"</div><div id='description'> Select a Rooftop Solar Challenge Awardee to see their impact.</div>";
-		  		second.innerHTML = "<span style='color:#2BB9CC; font-size: 16px; font-weight: bold; '>▇</span>&nbsp;&nbsp;&nbsp;States Benefiting from all Awardees";
 		  	} 
 		  	else {
 			  	info.innerHTML = "<div id='number'>Estimated number of people impacted "+ competition[l].popimpact +"</div><div id='description'><p>Headquarters: " + competition[l].city + ", " + competition[l].state + "</p><p>" + competition[l].text + "</p></div>";
-			  	second.innerHTML = "<span style='color:#2BB9CC; font-size: 16px; font-weight: bold; '>▇</span>&nbsp;&nbsp;&nbsp;States Benefiting from " + competition[l].name
 			};
 				ui.appendChild(info);
-				legendia.appendChild(second);
 		  	
 		  	//display this		  
-		  	if (q === 0) {lg.removeLayer(start);} else {lg.removeLayer(current2);};
+		  	if (q === 0) {lg.removeLayer(start);tgg.removeLayer(cheetah);lg.removeLayer(pointy)} else {lg.removeLayer(current2); tgg.removeLayer(current4); lg.removeLayer(pointycur2)};
 
-		  	var current = L.geoJson(testdata[l]);
+		  	var current = L.geoJson(data[l]);
+		  	var current3 = L.geoJson(data[l]);
+		  	var pointycur = L.geoJson(points[l]);
 
-		  	console.log(testdata[l])
+
+		  	// console.log(data[l])
 
 		  	current2 = current;
+		  	current4 = current3;
+		  	pointycur2 = pointycur;
+
 			lg.addLayer(current);
+			lg.addLayer(pointycur);
+			tgg.addLayer(current3);
 			lg.setStyle(style);
+			tgg.setStyle(style);
 
 			q ++;
 		  });
 		});
-		function getColor(d) {
-			return d == 0   ? '#ddad00' :
-			                 '#2BB9CC' ;
-		}
+
 
 		function style(feature)  {
 			// console.log(feature)
@@ -308,11 +359,11 @@ table {
                     weight: 3,
                     dashArray: '10,10',
                     fillOpacity: '0.5',
-					fillColor: getColor(feature.properties.highlight),
+					fillColor: '#2BB9CC',
 					color: '#2399A8'
                 }
             };
-
+// '#ddad00' '#2BB9CC'
 
 
 	</script>
