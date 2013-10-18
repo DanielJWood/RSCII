@@ -252,7 +252,6 @@ insetmap.scrollWheelZoom.disable();
 	  	var ui = document.getElementById('map-ui');	  	
 		var map = L.mapbox.map('map', 'energy.map-iaegae49', {zoomControl: false})
 		    .setView([37.8, -110], 4);
-		   console.log(map)
 map.dragging.disable();
 map.touchZoom.disable();
 map.doubleClickZoom.disable();
@@ -334,9 +333,6 @@ map.scrollWheelZoom.disable();
 		  	var current3 = L.geoJson(data[l]);
 		  	var pointycur = L.geoJson(points[l]);
 
-
-		  	// console.log(data[l])
-
 		  	current2 = current;
 		  	current4 = current3;
 		  	pointycur2 = pointycur;
@@ -353,7 +349,6 @@ map.scrollWheelZoom.disable();
 
 
 		function style(feature)  {
-			// console.log(feature)
 
 			return {
                     weight: 3,
